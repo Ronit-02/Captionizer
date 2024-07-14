@@ -21,6 +21,7 @@ const ManualTypingPage = () => {
     const [captions, setCaptions] = useState(JSON.parse(localStorage.getItem('captions')) || [initialState]);
     const [url, setUrl] = useState('');
     const [message, setMessage] = useState('');
+    const [language, setLanguage] = useState('English')
     const videoRef = useRef(null);
     // main slider
     // const [currentTime, setCurrentTime] = useState(0);
@@ -127,10 +128,10 @@ const ManualTypingPage = () => {
     // }
 
   return (
-    <div className="w-full flex flex-col h-full items-center gap-8">
+    <div className="flex flex-col items-center w-full h-full gap-8">
         <h1 className="text-2xl">Manually Type Your Captions</h1>
-        {/* <button onClick={openInstructions} className="text-blue-400 bg-white fixed top-10 right-10">View Instructions</button> */}
-        <main className="flex gap-8 justify-center flex-wrap w-full">
+        {/* <button onClick={openInstructions} className="fixed text-blue-400 bg-white top-10 right-10">View Instructions</button> */}
+        <main className="flex flex-wrap justify-center w-full gap-8">
             <section className="flex-col flex-none flex w-full gap-8 max-w-[500px] justify-start items-end">
                 <video 
                     ref={videoRef} 
@@ -141,28 +142,43 @@ const ManualTypingPage = () => {
                 >
                     <source src={link} type="video/mp4" />
                     {
-                        url &&
-                        <track label="English" kind="subtitles" src={url} srcLang="en" default />
+                        url && (
+                            language === "French" 
+                            ? <track label="French" kind="subtitles" src={url} srcLang="fr" default />
+                            : language === "Hindi"
+                            ? <track label="Hindi" kind="subtitles" src={url} srcLang="hi" default />
+                            : language === "Spanish"
+                            ? <track label="Spanish" kind="subtitles" src={url} srcLang="es" default />
+                            : <track label="English" kind="subtitles" src={url} srcLang="en" default />
+                        )
                     }
                 </video>
-                <div className="flex gap-4">
-                    <button 
-                        className="border-2 w-[100px] border-blue-500 text-blue-500 px-4 py-2 rounded-lg"
-                        onClick={handleExport}>
-                        Export
-                    </button>
-                    <button 
-                        className="px-4 py-2 text-white bg-blue-500 rounded-lg w-[100px]"
-                        onClick={handleSubmit}>
-                            Save
-                    </button>
+                <div className="flex justify-between w-full">
+                    <select onChange={(e) => setLanguage(e.target.value)} className="border-b-2 border-gray-200">
+                        <option value="English">English</option>
+                        <option value="French">French</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Spanish">Spanish</option>
+                    </select>
+                    <div className="flex gap-4">
+                        <button 
+                            className="border-2 w-[100px] border-blue-500 text-blue-500 px-4 py-2 rounded-lg"
+                            onClick={handleExport}>
+                            Export
+                        </button>
+                        <button 
+                            className="px-4 py-2 text-white bg-blue-500 rounded-lg w-[100px]"
+                            onClick={handleSubmit}>
+                                Save
+                        </button>
+                    </div>
                 </div>
                 {
-                    message && <div className="text-gray-400 italic">{message}</div>
+                    message && <div className="italic text-gray-400">{message}</div>
                 }
             </section>
             <section className="flex-auto flex min-w-[300px] max-w-[500px] flex-col gap-8">
-                <div className=" w-full flex flex-col gap-8">
+                <div className="flex flex-col w-full gap-8 ">
                 <button onClick={handleReset} className="w-[80px]">Reset All</button>
                 {
                     captions.map((cap, index) => (
