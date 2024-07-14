@@ -9,20 +9,16 @@ const EditPage = () => {
     const link = queryParams.get('link');   
     const navigate = useNavigate();
 
-    const handleTypeManually = () => {
-        navigate(`/type-manually?link=${encodeURIComponent(link)}`);
-    }
-
   return (
-    <div className="w-full flex flex-col items-center gap-8">
-        <h1 className="text-2xl">Provide captions to your video</h1>
+    <div className="flex flex-col items-center w-full gap-12 text-center text-balance">
+        <h1 className="text-2xl sm:text-3xl">Select one of the options below</h1>
         <video className="w-[500px]" controls>
             <source src={link} type="video/mp4" />
         </video>
-        <div className="flex flex-col gap-4 items-center">
-            <button onClick={handleTypeManually} className="px-4 py-2 text-white bg-blue-500 rounded-lg w-[150px]">Type Manually</button>
-            <button className="px-4 py-2 text-white bg-blue-500 rounded-lg w-[150px]">Auto Sync</button>
-            <button className="px-4 py-2 text-white bg-blue-500 rounded-lg w-[200px]">Auto Recommendation</button>
+        <div className="flex flex-col items-center w-full gap-4 max-w-[300px]">
+            <button onClick={() => navigate(`/type-manually?link=${encodeURIComponent(link)}`)} className="w-full px-4 py-2 text-black border-2 rounded-lg">Type Manually</button>
+            <button onClick={() => navigate(`/auto-sync`)} className="w-full px-4 py-2 text-black border-2 rounded-lg">Auto Sync</button>
+            <button onClick={() => navigate(`/auto-recommend`)} className="w-full px-4 py-2 text-black border-2 rounded-lg">Auto Recommendation</button>
         </div>
     </div>
   )

@@ -1,5 +1,3 @@
-// import { useLocation } from "react-router-dom";
-
 import { useEffect, useRef, useState } from "react";
 import { convertIntoSeconds, convertIntoVttTimeFormat, createBlobURL, generateVTTContent } from "../utils/helper";
 import Slider from "rc-slider";
@@ -19,9 +17,9 @@ const ManualTypingPage = () => {
         endTime: '00:00:00.000'
     }
     const [captions, setCaptions] = useState(JSON.parse(localStorage.getItem('captions')) || [initialState]);
+    const [language, setLanguage] = useState(localStorage.getItem('language') || 'English')
     const [url, setUrl] = useState('');
     const [message, setMessage] = useState('');
-    const [language, setLanguage] = useState('English')
     const videoRef = useRef(null);
     // main slider
     // const [currentTime, setCurrentTime] = useState(0);
@@ -122,22 +120,26 @@ const ManualTypingPage = () => {
         document.body.removeChild(link);
     };
 
+    const handleLanguage = (e) => {
+        setLanguage(e.target.value)
+        localStorage.setItem('language', e.target.value);
+    }
+
     // View Instructions
     // const openInstructions = () => {
         
     // }
 
   return (
-    <div className="flex flex-col items-center w-full h-full gap-8">
-        <h1 className="text-2xl">Manually Type Your Captions</h1>
+    <div className="flex flex-col items-center w-full h-full gap-12">
+        <h1 className="text-2xl sm:text-3xl">Manually Type Your Captions</h1>
         {/* <button onClick={openInstructions} className="fixed text-blue-400 bg-white top-10 right-10">View Instructions</button> */}
-        <main className="flex flex-wrap justify-center w-full gap-8">
+        <main className="flex flex-wrap justify-center w-full gap-12">
             <section className="flex-col flex-none flex w-full gap-8 max-w-[500px] justify-start items-end">
                 <video 
                     ref={videoRef} 
                     // onTimeUpdate={handleVideoTimeUpdate} 
-                    className="w-full h-[300px] 
-                    object-fill" 
+                    className="w-full h-[200px] sm:h-[300px] object-fill" 
                     controls
                 >
                     <source src={link} type="video/mp4" />
@@ -153,14 +155,14 @@ const ManualTypingPage = () => {
                         )
                     }
                 </video>
-                <div className="flex justify-between w-full">
-                    <select onChange={(e) => setLanguage(e.target.value)} className="border-b-2 border-gray-200">
+                <div className="flex flex-wrap justify-between w-full gap-4">
+                    <select onChange={handleLanguage} defaultValue={language} className="border-b-2 border-gray-200">
                         <option value="English">English</option>
                         <option value="French">French</option>
                         <option value="Hindi">Hindi</option>
                         <option value="Spanish">Spanish</option>
                     </select>
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4">
                         <button 
                             className="border-2 w-[100px] border-blue-500 text-blue-500 px-4 py-2 rounded-lg"
                             onClick={handleExport}>
@@ -177,7 +179,7 @@ const ManualTypingPage = () => {
                     message && <div className="italic text-gray-400">{message}</div>
                 }
             </section>
-            <section className="flex-auto flex min-w-[300px] max-w-[500px] flex-col gap-8">
+            <section className="flex-auto flex max-w-[500px] flex-col gap-8">
                 <div className="flex flex-col w-full gap-8 ">
                 <button onClick={handleReset} className="w-[80px]">Reset All</button>
                 {
@@ -185,10 +187,11 @@ const ManualTypingPage = () => {
 
                         <div className="flex flex-col gap-4" key={cap.id}>
                             <button onClick={() => addCaptionAbove(index)} className="text-blue-400 w-[50px]">Add</button>
-                            <div className="flex gap-4">
+                            <div className="flex flex-wrap gap-4">
                                 <textarea 
-                                    className="flex-auto px-4 py-2 border border-gray-400 rounded-xl w-18" 
+                                    className="flex-auto px-4 py-2 border border-gray-400 rounded-xl sm:w-18" 
                                     type="text" 
+                                    rows={3}
                                     placeholder="caption text here..."
                                     name="captionText"
                                     value={cap.captionText} 
